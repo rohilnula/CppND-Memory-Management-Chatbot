@@ -114,11 +114,11 @@ ChatBotPanelDialog::ChatBotPanelDialog(wxWindow *parent, wxWindowID id)
     // allow for PNG images to be handled
     wxInitAllImageHandlers();
 
-    //// STUDENT CODE
+    //// MEMORY MANAGEMENT CODE
     ////
 
     // create chat logic instance
-    _chatLogic = new ChatLogic(); 
+    _chatLogic = std::make_unique<ChatLogic>();
 
     // pass pointer to chatbot dialog so answers can be displayed in GUI
     _chatLogic->SetPanelDialogHandle(this);
@@ -127,18 +127,18 @@ ChatBotPanelDialog::ChatBotPanelDialog(wxWindow *parent, wxWindowID id)
     _chatLogic->LoadAnswerGraphFromFile(dataPath + "src/answergraph.txt");
 
     ////
-    //// EOF STUDENT CODE
+    //// EOF MEMORY MANAGEMENT CODE
 }
 
 ChatBotPanelDialog::~ChatBotPanelDialog()
 {
-    //// STUDENT CODE
+    //// MEMORY MANAGEMENT CODE
     ////
 
-    delete _chatLogic;
+    std::cout << "Destructing the ChatBotPanelDialog" << std::endl;
 
     ////
-    //// EOF STUDENT CODE
+    //// EOF MEMORY MANAGEMENT CODE
 }
 
 void ChatBotPanelDialog::AddDialogItem(wxString text, bool isFromUser)

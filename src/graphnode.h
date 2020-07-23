@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <memory>
 #include "chatbot.h"
 
 
@@ -12,18 +13,18 @@ class GraphEdge;
 class GraphNode
 {
 private:
-    //// STUDENT CODE
+    //// MEMORY MANAGEMENT CODE
     ////
 
     // data handles (owned)
-    std::vector<GraphEdge *> _childEdges;  // edges to subsequent nodes
+    std::vector<std::unique_ptr<GraphEdge>> _childEdges;  // edges to subsequent nodes
 
     // data handles (not owned)
     std::vector<GraphEdge *> _parentEdges; // edges to preceding nodes 
-    ChatBot *_chatBot;
+    ChatBot _chatBot;
 
     ////
-    //// EOF STUDENT CODE
+    //// EOF MEMORY MANAGEMENT CODE
 
     // proprietary members
     int _id;
@@ -44,15 +45,15 @@ public:
     // proprietary functions
     void AddToken(std::string token); // add answers to list
     void AddEdgeToParentNode(GraphEdge *edge);
-    void AddEdgeToChildNode(GraphEdge *edge);
+    void AddEdgeToChildNode(std::unique_ptr<GraphEdge> edge);
 
-    //// STUDENT CODE
+    //// MEMORY MANAGEMENT CODE
     ////
 
-    void MoveChatbotHere(ChatBot *chatbot);
+    void MoveChatbotHere(ChatBot chatbot);
 
     ////
-    //// EOF STUDENT CODE
+    //// EOF MEMORY MANAGEMENT CODE
 
     void MoveChatbotToNewNode(GraphNode *newNode);
 };

@@ -30,7 +30,7 @@ ChatBot::ChatBot(std::string filename)
     _image = new wxBitmap(filename, wxBITMAP_TYPE_PNG);
 }
 
-ChatBot::~ChatBot()
+ChatBot::~ChatBot() // Destructer
 {
     std::cout << "ChatBot Destructor" << std::endl;
 
@@ -42,11 +42,61 @@ ChatBot::~ChatBot()
     }
 }
 
-//// STUDENT CODE
+//// MEMORY MANAGEMENT CODE
 ////
 
+// Copy Constructor
+ChatBot::ChatBot(const ChatBot &source) {
+    std::cout << "COPYING content of instance " << &source << " to instance " << this << std::endl;
+    _chatLogic = source._chatLogic;
+    _rootNode = source._rootNode;
+    _image = new wxBitmap(*source._image);
+}
+
+// Copy Operator/Assignment
+ChatBot &ChatBot::operator=(const ChatBot &source) {
+    std::cout << "ASSIGNING content of instance " << &source << " to instance " << this << std::endl;
+    if (this == &source)
+        return *this;
+    delete _image;
+    _chatLogic = source._chatLogic;
+    _rootNode = source._rootNode;
+    _image = new wxBitmap(*source._image);
+    return *this;
+}
+
+// Move Constructor
+ChatBot::ChatBot(ChatBot &&source) {
+    std::cout << "MOVING (c'tor) instance " << &source << " to instance " << this << std::endl;
+    _chatLogic = source._chatLogic;
+    _rootNode = source._rootNode;
+    _image = source._image;
+
+    source._chatLogic = nullptr;
+    source._image = nullptr;
+
+    _chatLogic->SetChatbotHandle(this); // As per one of the suggestions on Knowledge Portal
+}
+
+// Move Assignment/Operator
+ChatBot &ChatBot::operator=(ChatBot &&source) {
+    std::cout << "MOVING (assign) instance " << &source << " to instance " << this << std::endl;
+    if (this == &source)
+        return *this;
+    delete _image;
+    _chatLogic = source._chatLogic;
+    _rootNode = source._rootNode;
+    _image = source._image;
+
+    source._chatLogic = nullptr;
+    source._image = nullptr;
+    
+    _chatLogic->SetChatbotHandle(this); // As per one of the suggestions on Knowledge Portal
+    return *this;
+}
+
 ////
-//// EOF STUDENT CODE
+//// EOF MEMORY MANAGEMENT CODE
 
 void ChatBot::ReceiveMessageFromUser(std::string message)
 {

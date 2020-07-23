@@ -1,3 +1,6 @@
+#include <iostream>
+#include <memory>
+
 #include "graphedge.h"
 #include "graphnode.h"
 
@@ -8,13 +11,14 @@ GraphNode::GraphNode(int id)
 
 GraphNode::~GraphNode()
 {
-    //// STUDENT CODE
+    //// MEMORY MANAGEMENT CODE
     ////
 
-    delete _chatBot; 
+    // delete _chatBot;
+    std::cout << "Destructing GraphNode ..." << std::endl;
 
     ////
-    //// EOF STUDENT CODE
+    //// EOF MEMORY MANAGEMENT CODE
 }
 
 void GraphNode::AddToken(std::string token)
@@ -27,34 +31,34 @@ void GraphNode::AddEdgeToParentNode(GraphEdge *edge)
     _parentEdges.push_back(edge);
 }
 
-void GraphNode::AddEdgeToChildNode(GraphEdge *edge)
+void GraphNode::AddEdgeToChildNode(std::unique_ptr<GraphEdge> edge)
 {
-    _childEdges.push_back(edge);
+    _childEdges.push_back(std::move(edge));
 }
 
-//// STUDENT CODE
+//// MEMORY MANAGEMENT CODE
 ////
-void GraphNode::MoveChatbotHere(ChatBot *chatbot)
+void GraphNode::MoveChatbotHere(ChatBot chatbot)
 {
-    _chatBot = chatbot;
-    _chatBot->SetCurrentNode(this);
+    _chatBot = std::move(chatbot);
+    _chatBot.SetCurrentNode(this);
 }
 
 void GraphNode::MoveChatbotToNewNode(GraphNode *newNode)
 {
     newNode->MoveChatbotHere(_chatBot);
-    _chatBot = nullptr; // invalidate pointer at source
+    // _chatBot = nullptr; // invalidate pointer at source
 }
 ////
-//// EOF STUDENT CODE
+//// EOF MEMORY MANAGEMENT CODE
 
 GraphEdge *GraphNode::GetChildEdgeAtIndex(int index)
 {
-    //// STUDENT CODE
+    //// MEMORY MANAGEMENT CODE
     ////
 
-    return _childEdges[index];
+    return _childEdges[index].get();
 
     ////
-    //// EOF STUDENT CODE
+    //// EOF MEMORY MANAGEMENT CODE
 }
